@@ -1,10 +1,27 @@
 "use client";
 import Form from "next/form";
+import axios from "axios";
 
 export default function UploadBox() {
+  const handleUpload = async () => {
+    const input = document.getElementById("cv") as HTMLInputElement;
+    const file = input.files?.[0];
+    await axios
+      .post("http://127.0.0.1:8000/cv", { cv: file })
+      .then((res) => {
+        console.log("File was posted successfully: ", res.data);
+      })
+      .catch((err) => {
+        console.error("Error posting file:", err);
+      });
+  };
   return (
     <>
-      <Form action="" className="flex items-center justify-center ">
+      <Form
+        onSubmit={handleUpload}
+        action="/cv"
+        className="flex items-center justify-center "
+      >
         <label
           htmlFor="dropzone-file"
           className="flex flex-col items-center justify-center px-60 h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium rounded-md"
@@ -33,7 +50,8 @@ export default function UploadBox() {
             </p>
             <p className="text-xs">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
           </div>
-          <input id="dropzone-file" type="file" className="hidden" />
+          <input id="cv" type="file" className="hidden" accept=".pdf" />
+          <button type="submit">Upload</button>
         </label>
       </Form>
     </>
